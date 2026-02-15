@@ -1,7 +1,8 @@
 import json
+import traceback
 import typing
 
-from aiohttp.web_exceptions import HTTPUnprocessableEntity
+from aiohttp.web_exceptions import HTTPUnprocessableEntity, HTTPException
 from aiohttp.web_middlewares import middleware
 from aiohttp_apispec import validation_middleware
 
@@ -31,6 +32,19 @@ async def error_handling_middleware(request: "Request", handler):
             status=HTTP_ERROR_CODES[400],
             message=e.reason,
             data=json.loads(e.text),
+        )
+    except HTTPException as e:
+        return error_json_response(
+            http_status=e.status,
+            status=HTTP_ERROR_CODES.get(e.status, "error"),
+            message=e.reason,
+        )
+    except Exception:
+        traceback.print_exc()
+        return error_json_response(
+            http_status=500,
+            status=HTTP_ERROR_CODES[500],
+            message="Internal server error",
         )
 
     return response
