@@ -9,7 +9,7 @@ if typing.TYPE_CHECKING:
 
 @dataclass
 class SessionConfig:
-    pass
+    key: str
 
 
 @dataclass
@@ -20,7 +20,8 @@ class AdminConfig:
 
 @dataclass
 class BotConfig:
-    pass
+    token: str
+    group_id: int
 
 
 @dataclass
@@ -40,4 +41,11 @@ def setup_config(app: "Application", config_path: str):
             email=raw_config["admin"]["email"],
             password=raw_config["admin"]["password"],
         ),
+        session=SessionConfig(
+            key=raw_config["session"]["key"],
+        ) if "session" in raw_config else None,
+        bot=BotConfig(
+            token=raw_config["bot"]["token"],
+            group_id=raw_config["bot"]["group_id"],
+        ) if "bot" in raw_config else None,
     )
