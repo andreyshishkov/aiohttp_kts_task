@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Optional
 
 
 @dataclass
@@ -8,10 +9,14 @@ class Theme:
 
 
 @dataclass
-class Question:
-    pass
+class Answer:
+    title: str
+    is_correct: bool
 
 
 @dataclass
-class Answer:
-    pass
+class Question:
+    title: str
+    id: Optional[int]
+    theme_id: Optional[int]
+    answers: list[Answer]
